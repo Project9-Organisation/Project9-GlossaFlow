@@ -1,0 +1,42 @@
+name: Trigger infrastructure deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Terraform action"
+        required: true
+        default: "plan"
+        type: choice
+        options:
+          - plan
+          - apply
+          - plan-destroy
+          - destroy
+      environment:
+        description: "Environment"
+        required: true
+        default: "staging"
+        type: choice
+        options:
+          - staging
+          - prod
+
+permissions:
+  contents: read
+
+jobs:
+  call-Deployment-Infra:
+    uses: Project6-Organisation/Project6-Integration/.github/workflows/_04_Deployment_Infra.yml@main
+    with:
+      action: ${{ github.event.inputs.action }}
+      environment: ${{ github.event.inputs.environment }}
+    secrets: inherit
+
+  call-Deployment-Monitoring:
+    needs: call-Deployment-Infra
+    if: ${{ github.event.inputs.action == 'apply' }}
+    uses: Project6-Organisation/Project6-Integration/.github/workflows/_05_Deployment_Monitoring.yml@main
+    with:
+      environment: ${{ github.event.inputs.environment }}
+    secrets: inherit
