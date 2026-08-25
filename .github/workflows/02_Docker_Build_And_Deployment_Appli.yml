@@ -1,0 +1,31 @@
+name: Docker build and application deployment
+
+# Triggered on :
+# - on merge to develop or main branch (the event is push)
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+    
+permissions:
+  contents: write
+  packages: write
+  issues: write
+  pull-requests: write
+ 
+jobs:  
+  Docker_Build:
+    uses: Project9-Organisation/Project9-Integration/.github/workflows/_02_Docker_Build.yml@main
+    with:
+      environment: ${{ github.ref_name == 'main' && 'prod' || 'staging' }}
+    secrets: inherit
+
+  Continuous-Deployment:
+    needs: Docker_Build
+    uses: Project9-Organisation/Project9-Integration/.github/workflows/_03_Deployment_Appli.yml@main
+    with:
+      environment: ${{ github.ref_name == 'main' && 'prod' || 'staging' }}
+      image_tag: ${{ needs.Docker_Build.outputs.image_tag }}
+    secrets: inherit 
