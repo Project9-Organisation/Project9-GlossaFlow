@@ -24,4 +24,4 @@ jobs:
 
   Continuous-Integration:
     uses: Project9-Organisation/Project9-Integration/.github/workflows/_01_Integration.yml@main
-    secrets: inherit
+    secrets: inherit 
