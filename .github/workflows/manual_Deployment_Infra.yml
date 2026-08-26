@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   call-Deployment-Infra:
-    uses: Project6-Organisation/Project9-Integration/.github/workflows/_04_Deployment_Infra.yml@main
+    uses: Project9-Organisation/Project9-Integration/.github/workflows/_04_Deployment_Infra.yml@main
     with:
       action: ${{ github.event.inputs.action }}
       environment: ${{ github.event.inputs.environment }}
@@ -36,7 +36,7 @@ jobs:
   call-Deployment-Monitoring:
     needs: call-Deployment-Infra
     if: ${{ github.event.inputs.action == 'apply' }}
-    uses: Project6-Organisation/Project9-Integration/.github/workflows/_05_Deployment_Monitoring.yml@main
+    uses: Project9-Organisation/Project9-Integration/.github/workflows/_05_Deployment_Monitoring.yml@main
     with:
       environment: ${{ github.event.inputs.environment }}
     secrets: inherit
